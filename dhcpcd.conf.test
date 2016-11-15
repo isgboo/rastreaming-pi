@@ -1,0 +1,4 @@
+interface eth0
+static ip_address=123/9
+static routers=234
+static domain_name_servers=8.8.8.8

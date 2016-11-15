@@ -1,0 +1,23 @@
+  <h2>audio configuration</h2>
+  <form action="save_audio_config" method="get">
+    Input Source:<br>
+    <input type="radio" name="audioSource" value="hw:0,0" checked><span> Analog</span><br>
+    <input type="radio" name="audioSource" value="hw:O,1"><span> Digital</span><br>
+    Audio Format:<br>
+    <input type="radio" name="audioFormat" value="mp3" checked><span> Mp3</span><br>
+    <input type="radio" name="audioFormat" value="ogg"><span> Ogg</span><br>
+    Audio Bitrate:<br>
+    <input type="radio" name="audioBitRate" value="64"><span> 64</span><br>
+    <input type="radio" name="audioBitRate" value="96" checked><span> 96</span><br>
+    <input type="radio" name="audioBitRate" value="128"><span> 128</span><br>
+    Server name:<br>
+    <input type="text" name="serverName"><br>
+    User password:<br>
+    <input type="password" name="serverPassword"><br>
+    Mount Point:<br>
+    <input type="text" name="mountPoint"><br>
+    Stream Name:<br>
+    <input type="text" name="streamName"><br>
+    <br><button type="submit">Save</button>
+  </form>
+  <a href="../index.html"> Back </a>

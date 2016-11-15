@@ -1,0 +1,12 @@
+<h2>Network</h2>
+<form action="save_network" method="get">
+  IP:<br>
+  Indicate a valid static ip<br>
+  <input type="text" name="ipAddress" pattern="((^|\.)((25[0-5])|(2[0-4]\d)|(1\d\d)|([1-9]?\d))){4}$" required><br>
+  Indicate your network gateway<br>
+  <input type="text" name="gateway" pattern="((^|\.)((25[0-5])|(2[0-4]\d)|(1\d\d)|([1-9]?\d))){4}$" required><br>
+  Indicate your netmask<br>
+  <input type="text" name="netmask" pattern="((^|\.)((25[0-5])|(2[0-4]\d)|(1\d\d)|([1-9]?\d))){4}$" required><br>
+  <button type="submit">Save and Reboot device</button>
+</form>
+<a href="../index.html"> Back </a>
