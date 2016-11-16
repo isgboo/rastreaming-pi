@@ -1,17 +1,29 @@
-   //On inclus la librairie http qui permet la création d'un serveur http basique
-    var http = require('http');
-    var express = require('express');
-    var fs = require('fs');
-    var exec = require('child_process').exec;
-    var cidrize = require('subnet2cidr').cidrize,
-        maskize = require('subnet2cidr').cidr2subnet;
+//On inclus la librairie http qui permet la création d'un serveur http basique
+var http = require('http');
+var express = require('express');
+var fs = require('fs');
+var exec = require('child_process').exec;
+var cidrize = require('subnet2cidr').cidrize;
+var maskize = require('subnet2cidr').cidr2subnet;
+var mdns = require('mdns-js');
 
-    var app = express();
+//if you have another mdns daemon running, like avahi or bonjour, uncomment following line
+//mdns.excludeInterface('0.0.0.0');
+
+var browser = mdns.createBrowser();
+
+browser.on('ready', function () {
+    browser.discover();
+});
+
+var app = express();
+
 
 app.use('/', express.static('public'));
+app.use('/jquery', express.static('node_modules/jquery/dist'));
+app.use('/bootstrap', express.static('node_modules/bootstrap/dist'));
 
-
-    //Collect variables from the HTML audio_config form
+//Collect variables from the HTML audio_config form
 
 app.get('/save_audio_config', function(request, response, next) {
 
