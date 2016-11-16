@@ -18,10 +18,13 @@ browser.on('ready', function () {
 
 var app = express();
 
-
 app.use('/', express.static('public'));
 app.use('/jquery', express.static('node_modules/jquery/dist'));
 app.use('/bootstrap', express.static('node_modules/bootstrap/dist'));
+
+function execute(command, callback){
+  exec(command, function(error, stdout, stderr){ callback(stdout); });
+}
 
 //Collect variables from the HTML audio_config form
 
@@ -71,33 +74,34 @@ app.get('/save_network', function(request, response, next) {
       var netmask = request.param('netmask')
 
 
-    //Convert IP subnetmask in cidr
+      //Convert IP subnetmask in cidr
 
       var cidr = cidrize(netmask)
 
+      //Replace value in dhcp_variable.conf
 
-    //Replace value in dhcp_variable.conf
-
-    networkCFG = networkCFG.replace('${ipAddress}', ipAddress);
-    networkCFG = networkCFG.replace('${gateway}', gateway);
-    networkCFG = networkCFG.replace('${cidr}', cidr);
+      networkCFG = networkCFG.replace('${ipAddress}', ipAddress);
+      networkCFG = networkCFG.replace('${gateway}', gateway);
+      networkCFG = networkCFG.replace('${cidr}', cidr);
 
 
-    //Write dhcpcd.conf file
+      //Write dhcpcd.conf file
 
-  fs.writeFile('/home/charly/git/rastreaming/dhcpcd.conf.test', networkCFG, 'utf8')
+    fs.writeFile('/home/charly/git/rastreaming/dhcpcd.conf.test', networkCFG, 'utf8')
 
-  response.redirect('/response_network_config.html')
-    function execute(command, callback){
-    exec(command, function(error, stdout, stderr){ callback(stdout); });
-}
-
-execute('./reboot_script.sh ', function(callback){
-    //console.log(callback);
-    console.log('reboot in 5 seconds');
-});
+    response.redirect('/response_network_config.html')
 
   })
+
+})
+
+app.get('/reboot', function(request, response, next) {
+
+  execute('./reboot_script.sh ', function(callback){
+      console.log('reboot now');
+  });
+
+  response.redirect('/reboot.html')
 
 })
 
@@ -105,9 +109,6 @@ execute('./reboot_script.sh ', function(callback){
 app.get('/streaming_on', function(request, response, next) {
 
   response.redirect('/response_connect.html')
-      function execute(command, callback){
-    exec(command, function(error, stdout, stderr){ callback(stdout); });
-  }
 
   execute('darkice ', function(callback){
       //console.log(callback);
@@ -116,24 +117,21 @@ app.get('/streaming_on', function(request, response, next) {
 
  })
 
+
  //Darkice stop command
 
  app.get('/streaming_off', function(request, response, next) {
 
-   response.redirect('/index.html')
-   function execute(command, callback){
- exec(command, function(error, stdout, stderr){ callback(stdout); });
- }
+  response.redirect('/index.html')
 
- execute('killall darkice ', function(callback){
-   //console.log(callback);
-   console.log('streaming_off');
- });
+  execute('killall darkice ', function(callback){
+    //console.log(callback);
+    console.log('streaming_off');
+  });
 
 })
 
-
-/* On lance a méthode createServer qui prend pour argument une fonction de retour $ */
+//* On lance a méthode createServer qui prend pour argument une fonction de retour $ */
 http.createServer(app).listen(8080, function () {
 
   console.log('rastreaming-pi interface lunched');

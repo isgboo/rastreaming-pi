@@ -1,3 +1,31 @@
 Network Configuration have been saved.<br>
-The device will be rebooted.<br>
+The device will be rebooted in <span id="counter"></span>s.<br>
 <a href="../index.html"> Go to the main page to continue</a>
+
+
+<script>
+
+function printAndCountdown (seconds) {
+
+  if (seconds >= 0) {
+
+    document.getElementById('counter').innerHTML = seconds;
+
+    setTimeout(function(){
+
+      printAndCountdown(seconds - 1);
+
+    }, 1000);
+
+  } else {
+
+    document.location = '/reboot'
+
+  }
+
+
+}
+
+printAndCountdown(5)
+
+</script>
