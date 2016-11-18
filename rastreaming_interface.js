@@ -7,9 +7,6 @@ var cidrize = require('subnet2cidr').cidrize;
 var maskize = require('subnet2cidr').cidr2subnet;
 var mdns = require('mdns-js');
 
-//if you have another mdns daemon running, like avahi or bonjour, uncomment following line
-//mdns.excludeInterface('0.0.0.0');
-
 var browser = mdns.createBrowser();
 
 browser.on('ready', function () {
@@ -26,6 +23,7 @@ function execute(command, callback){
   exec(command, function(error, stdout, stderr){ callback(stdout); });
 }
 
+
 //Collect variables from the HTML audio_config form
 
 app.get('/save_audio_config', function(request, response, next) {
@@ -39,7 +37,6 @@ app.get('/save_audio_config', function(request, response, next) {
       var serverPassword = request.param('serverPassword')
       var mountPoint = request.param('mountPoint')
       var streamName = request.param('streamName')
-
 
     //Replace string value in the darkice_variable.cfg file
 
@@ -67,7 +64,11 @@ app.get('/save_audio_config', function(request, response, next) {
 
 app.get('/save_network', function(request, response, next) {
 
-  fs.readFile('./dhcpcd_variable.conf', 'utf8', function (error, networkCFG) {
+  var networkStatus = request.param('networkStatus')
+
+  if (networkStatus == "static"){
+
+    fs.readFile('./dhcpcd_static.conf', 'utf8', function (error, networkCFG) {
 
       var ipAddress = request.param('ipAddress')
       var gateway = request.param('gateway')
@@ -84,16 +85,28 @@ app.get('/save_network', function(request, response, next) {
       networkCFG = networkCFG.replace('${gateway}', gateway);
       networkCFG = networkCFG.replace('${cidr}', cidr);
 
+      fs.writeFile('./dhcpcd.conf.test', networkCFG, 'utf8')
+
+      response.redirect('/response_network_config.html')
+
+    });
+  } else {
+
+    fs.readFile('./dhcpcd_dhcp.conf', 'utf8', function (error, networkCFG) {
+
 
       //Write dhcpcd.conf file
 
-    fs.writeFile('/home/charly/git/rastreaming/dhcpcd.conf.test', networkCFG, 'utf8')
+    fs.writeFile('./dhcpcd.conf.test', networkCFG, 'utf8')
 
     response.redirect('/response_network_config.html')
 
-  })
-
+  });
+  }
 })
+
+
+//Reboot Command from response_network_config after countdown
 
 app.get('/reboot', function(request, response, next) {
 
@@ -105,7 +118,9 @@ app.get('/reboot', function(request, response, next) {
 
 })
 
-    //Darkice launch command
+
+//Darkice launch command
+
 app.get('/streaming_on', function(request, response, next) {
 
   response.redirect('/response_connect.html')
@@ -118,7 +133,7 @@ app.get('/streaming_on', function(request, response, next) {
  })
 
 
- //Darkice stop command
+//Darkice stop command
 
  app.get('/streaming_off', function(request, response, next) {
 
