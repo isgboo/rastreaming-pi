@@ -32,22 +32,29 @@ app.get('/save_audio_config', function(request, response, next) {
 
       var audioSource = request.param('audioSource')
       var audioFormat = request.param('audioFormat')
+      var audioChannels =request.param('audioChannels')
       var audioBitRate = request.param('audioBitRate')
       var serverName = request.param('serverName')
       var serverPassword = request.param('serverPassword')
       var mountPoint = request.param('mountPoint')
       var streamName = request.param('streamName')
+      var description =request.param('description')
+      var genre = request.param('genre')
+      var url =request.param('url')
 
     //Replace string value in the darkice_variable.cfg file
 
       audioCFG = audioCFG.replace('${audioSource}', audioSource);
       audioCFG = audioCFG.replace('${audioFormat}', audioFormat);
+      audioCFG = audioCFG.replace('${audioChannels}', audioChannels);
       audioCFG = audioCFG.replace('${audioBitRate}', audioBitRate);
       audioCFG = audioCFG.replace('${serverName}', serverName);
       audioCFG = audioCFG.replace('${serverPassword}', serverPassword);
       audioCFG = audioCFG.replace('${mountPoint}', mountPoint);
       audioCFG = audioCFG.replace('${streamName}', streamName);
-
+      audioCFG = audioCFG.replace('${description}', description);
+      audioCFG = audioCFG.replace('${genre}',genre);
+      audioCFG = audioCFG.replace('${url}', url);
 
     //Write darkice.cfg file
 
@@ -85,7 +92,7 @@ app.get('/save_network', function(request, response, next) {
       networkCFG = networkCFG.replace('${gateway}', gateway);
       networkCFG = networkCFG.replace('${cidr}', cidr);
 
-      fs.writeFile('./dhcpcd.conf.test', networkCFG, 'utf8')
+      fs.writeFile('/etc/dhcpcd.conf', networkCFG, 'utf8')
 
       response.redirect('/response_network_config.html')
 
@@ -97,7 +104,7 @@ app.get('/save_network', function(request, response, next) {
 
       //Write dhcpcd.conf file
 
-    fs.writeFile('./dhcpcd.conf.test', networkCFG, 'utf8')
+    fs.writeFile('/etc/dhcpcd.conf', networkCFG, 'utf8')
 
     response.redirect('/response_network_config.html')
 

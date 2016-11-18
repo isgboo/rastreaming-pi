@@ -1,4 +1,4 @@
-  <h2>audio configuration</h2>
+  <h2>audio streaming configuration</h2>
   <form action="save_audio_config" method="get">
     Input Source:<br>
     <input type="radio" name="audioSource" value="hw:0,0" checked><span> Analog</span><br>
@@ -6,6 +6,9 @@
     Audio Format:<br>
     <input type="radio" name="audioFormat" value="mp3" checked><span> Mp3</span><br>
     <input type="radio" name="audioFormat" value="ogg"><span> Ogg</span><br>
+    Audio Channels:<br>
+    <input type="radio" name="audioChannels" value="2" checked><span> Stereo</span><br>
+    <input type="radio" name="audioChannels" value="1" checked><span> Mono</span><br>
     Audio Bitrate:<br>
     <input type="radio" name="audioBitRate" value="64"><span> 64</span><br>
     <input type="radio" name="audioBitRate" value="96" checked><span> 96</span><br>
@@ -18,6 +21,12 @@
     <input type="text" name="mountPoint"><br>
     Stream Name:<br>
     <input type="text" name="streamName"><br>
+    Description:<br>
+    <input type="text" name="description"><br>
+    Genre:<br>
+    <input type="text" name="genre"><br>
+    URL:<br>
+    <input type="text" name="url"><br>
     <br><button type="submit">Save</button>
   </form>
   <a href="../index.html"> Back </a>
