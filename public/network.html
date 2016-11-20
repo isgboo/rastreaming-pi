@@ -4,8 +4,8 @@
 
 <h2>Network</h2>
 <form id="network" action="save_network" method="get">
-  <input type='radio' name='networkStatus' value='dhcp' checked><span> DHCP</span><br>
-  <br><input type='radio' name='networkStatus' value='static'><span> Static Ip</span><br>
+  <input type='radio' name='networkStatus' disabled value='dhcp' checked><span> DHCP</span><br>
+  <br><input type='radio' name='networkStatus' checked value='static'><span> Static Ip</span><br>
   <br>IP:<br>
   Indicate a valid static ip<br>
   <input type="text" name="ipAddress" class="staticConfig" disabled pattern="((^|\.)((25[0-5])|(2[0-4]\d)|(1\d\d)|([1-9]?\d))){4}$" required><br>

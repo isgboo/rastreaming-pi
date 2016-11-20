@@ -15,9 +15,9 @@ browser.on('ready', function () {
 
 var app = express();
 
-app.use('/', express.static('public'));
-app.use('/jquery', express.static('node_modules/jquery/dist'));
-app.use('/bootstrap', express.static('node_modules/bootstrap/dist'));
+app.use('/', express.static('/var/node-www/rastreaming-pi/public'));
+app.use('/jquery', express.static('/var/node-www/rastreaming-pi/node_modules/jquery/dist'));
+app.use('/bootstrap', express.static('/var/node-www/rastreaming-pi/node_modules/bootstrap/dist'));
 
 function execute(command, callback){
   exec(command, function(error, stdout, stderr){ callback(stdout); });
@@ -28,7 +28,7 @@ function execute(command, callback){
 
 app.get('/save_audio_config', function(request, response, next) {
 
-  fs.readFile('./darkice_variable.cfg', 'utf8', function (error, audioCFG) {
+  fs.readFile('/var/node-www/rastreaming-pi/darkice_variable.cfg', 'utf8', function (error, audioCFG) {
 
       var audioSource = request.param('audioSource')
       var audioFormat = request.param('audioFormat')
@@ -75,7 +75,7 @@ app.get('/save_network', function(request, response, next) {
 
   if (networkStatus == "static"){
 
-    fs.readFile('./dhcpcd_static.conf', 'utf8', function (error, networkCFG) {
+    fs.readFile('/var/node-www/rastreaming-pi/dhcpcd_static.conf', 'utf8', function (error, networkCFG) {
 
       var ipAddress = request.param('ipAddress')
       var gateway = request.param('gateway')
@@ -99,7 +99,7 @@ app.get('/save_network', function(request, response, next) {
     });
   } else {
 
-    fs.readFile('./dhcpcd_dhcp.conf', 'utf8', function (error, networkCFG) {
+    fs.readFile('/var/node-www/rastreaming-pi/dhcpcd_dhcp.conf', 'utf8', function (error, networkCFG) {
 
 
       //Write dhcpcd.conf file
@@ -117,7 +117,7 @@ app.get('/save_network', function(request, response, next) {
 
 app.get('/reboot', function(request, response, next) {
 
-  execute('./reboot_script.sh ', function(callback){
+  execute('/var/node-www/rastreaming-pi/reboot_script.sh ', function(callback){
       console.log('reboot now');
   });
 
@@ -132,7 +132,7 @@ app.get('/streaming_on', function(request, response, next) {
 
   response.redirect('/response_connect.html')
 
-  execute('darkice ', function(callback){
+  execute('sudo darkice ', function(callback){
       //console.log(callback);
       console.log('streaming_on');
   });
@@ -146,7 +146,7 @@ app.get('/streaming_on', function(request, response, next) {
 
   response.redirect('/index.html')
 
-  execute('killall darkice ', function(callback){
+  execute('sudo killall darkice ', function(callback){
     //console.log(callback);
     console.log('streaming_off');
   });
@@ -154,7 +154,7 @@ app.get('/streaming_on', function(request, response, next) {
 })
 
 //* On lance a méthode createServer qui prend pour argument une fonction de retour $ */
-http.createServer(app).listen(8080, function () {
+http.createServer(app).listen(80, function () {
 
   console.log('rastreaming-pi interface lunched');
 
