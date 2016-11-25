@@ -1,0 +1,32 @@
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script>
+$(document).ready(function() {
+// By Default Disable radio button
+$("form input:radio").change(function() {
+if ($(this).val() == "dhcp") {
+$(".staticConfig").attr('checked', false);
+$(".staticConfig").attr('disabled', true);
+}
+// Else Enable radio buttons.
+else {
+$(".staticConfig").attr('disabled', false);
+}
+});
+});
+</script>
+
+<h2>Network</h2>
+<form id="network" action="save_network" method="get">
+  <input type='radio' name='networkStatus' checked value='dhcp' checked><span> DHCP</span><br>
+  <br><input type='radio' name='networkStatus' value='static'><span> Static Ip</span><br>
+  <br>IP:<br>
+  Indicate a valid static ip<br>
+  <input type="text" name="ipAddress" disabled class="staticConfig" pattern="((^|\.)((25[0-5])|(2[0-4]\d)|(1\d\d)|([1-9]?\d))){4}$" required><br>
+  Indicate your network gateway<br>
+  <input type="text" name="gateway" disabled class="staticConfig" pattern="((^|\.)((25[0-5])|(2[0-4]\d)|(1\d\d)|([1-9]?\d))){4}$" required><br>
+  Indicate your netmask<br>
+  <input type="text" name="netmask" disabled class="staticConfig" pattern="((^|\.)((25[0-5])|(2[0-4]\d)|(1\d\d)|([1-9]?\d))){4}$" required><br>
+  <button type="submit">Save and Reboot device</button>
+</form>
+<a href="../index.html"> Back </a>

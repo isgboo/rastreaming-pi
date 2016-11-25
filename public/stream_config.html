@@ -1,11 +1,8 @@
-  <h2>audio streaming configuration</h2>
-  <form action="save_audio_config" method="get">
-    Input Source:<br>
-    <input type="radio" name="audioSource" value="hw:0,0" checked><span> Analog</span><br>
-    <input type="radio" name="audioSource" disabled value="hw:O,1"><span> Digital</span><br>
+  <h2>streaming configuration</h2>
+  <form action="save_stream_config" method="get">
     Audio Format:<br>
     <input type="radio" name="audioFormat" value="mp3" checked><span> Mp3</span><br>
-    <input type="radio" name="audioFormat" disabled value="ogg"><span> Ogg</span><br>
+    <input type="radio" name="audioFormat" value="vorbis"><span> Ogg</span><br>
     Audio Channels:<br>
     <input type="radio" name="audioChannels" value="2" checked><span> Stereo</span><br>
     <input type="radio" name="audioChannels" disabled value="1"><span> Mono</span><br>

@@ -26,11 +26,10 @@ function execute(command, callback){
 
 //Collect variables from the HTML audio_config form
 
-app.get('/save_audio_config', function(request, response, next) {
+app.get('/save_stream_config', function(request, response, next) {
 
   fs.readFile('/var/node-www/rastreaming-pi/darkice_variable.cfg', 'utf8', function (error, audioCFG) {
 
-      var audioSource = request.param('audioSource')
       var audioFormat = request.param('audioFormat')
       var audioChannels =request.param('audioChannels')
       var audioBitRate = request.param('audioBitRate')
@@ -44,7 +43,6 @@ app.get('/save_audio_config', function(request, response, next) {
 
     //Replace string value in the darkice_variable.cfg file
 
-      audioCFG = audioCFG.replace('${audioSource}', audioSource);
       audioCFG = audioCFG.replace('${audioFormat}', audioFormat);
       audioCFG = audioCFG.replace('${audioChannels}', audioChannels);
       audioCFG = audioCFG.replace('${audioBitRate}', audioBitRate);
@@ -60,10 +58,44 @@ app.get('/save_audio_config', function(request, response, next) {
 
   fs.writeFile('/etc/darkice.cfg', audioCFG, 'utf8')
 
-  response.redirect('/response_audio_config.html')
+  response.redirect('/response_stream_config.html')
 
   })
 
+})
+
+
+app.get('/save_audio_config', function(request, response, next) {
+
+  fs.readFile('/var/node-www/rastreaming-pi/public/input_config_base.html', 'utf8', function (error, inputCFG) {
+
+    var audioInput = request.param('audioInput')
+
+    if (audioInput == "analog"){
+
+
+      inputCFG = inputCFG.replace('${audioInput}', audioInput);
+
+      fs.writeFile('/var/node-www/rastreaming-pi/public/input_config.html', inputCFG, 'utf8');
+
+      execute('/var/node-www/rastreaming-pi/Reset_paths.sh && /var/node-www/rastreaming-pi/Record_from_lineIn.sh', function(callback){
+        console.log('changing audio config to analog');
+      });
+
+    }else{
+
+      inputCFG = inputCFG.replace('${audioInput}', audioInput);
+
+      fs.writeFile('/var/node-www/rastreaming-pi/public/input_config.html', inputCFG, 'utf8');
+
+      execute('/var/node-www/rastreaming-pi/Reset_paths.sh && /var/node-www/rastreaming-pi/SPDIF_record.sh', function(callback){
+        console.log('changing audio config to digital');
+      });
+
+    }
+
+  response.redirect('response_audio_config.html')
+  });
 })
 
 
@@ -117,8 +149,8 @@ app.get('/save_network', function(request, response, next) {
 
 app.get('/reboot', function(request, response, next) {
 
-  execute('/var/node-www/rastreaming-pi/reboot_script.sh ', function(callback){
-      console.log('reboot now');
+  execute('sudo shutdown -r now', function(callback){
+      console.log('The system is going down for reboot NOW!');
   });
 
   response.redirect('/reboot.html')
@@ -132,7 +164,7 @@ app.get('/streaming_on', function(request, response, next) {
 
   response.redirect('/response_connect.html')
 
-  execute('sudo darkice ', function(callback){
+  execute('sudo darkice', function(callback){
       //console.log(callback);
       console.log('streaming_on');
   });
@@ -146,12 +178,40 @@ app.get('/streaming_on', function(request, response, next) {
 
   response.redirect('/index.html')
 
-  execute('sudo killall darkice ', function(callback){
+  execute('sudo killall darkice', function(callback){
     //console.log(callback);
     console.log('streaming_off');
   });
 
 })
+
+//reboot launch command
+
+app.get('/device_reboot', function(request, response, next) {
+
+
+  execute('sudo shutdown -r now', function(callback){
+      console.log('The system is going down for reboot NOW!');
+  });
+
+  response.redirect('/reboot.html')
+ })
+
+
+//shutdown launch command
+
+app.get('/device_shutdown', function(request, response, next) {
+
+  response.redirect('/response_shutdown.html')
+
+  execute('sleep 2 && sudo shutdown -h now', function(callback){
+      //console.log(callback);
+      console.log('The system is going down in 2 seconds');
+  });
+
+ })
+
+
 
 //* On lance a méthode createServer qui prend pour argument une fonction de retour $ */
 http.createServer(app).listen(80, function () {
